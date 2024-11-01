@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <title>Crypto Trading Bot</title>
+</head>
+<body>
+    <h1>Crypto Trading Bot</h1>
+
+    <form id="env-form" action="/set_env" method="post">
+        <h2>Configuração de Credenciais</h2>
+        <label for="api_key">API Key:</label>
+        <input type="text" id="api_key" name="api_key" required>
+        
+        <label for="secret_key">Secret Key:</label>
+        <input type="text" id="secret_key" name="secret_key" required>
+        
+        <label for="passphrase">Passphrase:</label>
+        <input type="text" id="passphrase" name="passphrase" required>
+        
+        <button type="submit">Salvar Credenciais</button>
+    </form>
+    
+    <div class="carteira-info">
+        <h2>Carteira Atual</h2>
+        {% if carteira_virtual %}
+            <p>Capital: {{ carteira_virtual.get("capital", "N/A") }}</p>
+            <!-- Adicione mais detalhes da carteira, se necessário -->
+        {% else %}
+            <p>Informações da carteira não disponíveis</p>
+        {% endif %}
+    </div>
+    
+    <form id="start-form" action="/start" method="post">
+        <label for="par">Par:</label>
+        <input type="text" id="par" name="par" required>
+        <label for="capital_inicial">Capital Inicial:</label>
+        <input type="number" id="capital_inicial" name="capital_inicial" step="0.01" required>
+        <button type="submit">Executar Loop</button>
+    </form>
+    <form id="pause-form" action="/pause" method="post">
+        <button type="submit">Pausar Loop</button>
+    </form>
+    <form id="resume-form" action="/resume" method="post">
+        <button type="submit">Continuar Loop</button>
+    </form>
+    <form id="stop-form" action="/stop" method="post">
+        <button type="submit">Encerrar Execução</button>
+    </form>
+    <div class="historico">
+        <h2>Histórico de Negociação</h2>
+        <ul id="historico-list">
+            {% if historico_negociacao is not none and not historico_negociacao.empty %}
+                {% for _, row in historico_negociacao.iterrows() %}
+                    <li>
+                        {% for key, value in row.items() %}
+                            <strong>{{ key }}:</strong> {{ value }} 
+                        {% endfor %}
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li>Nenhum histórico disponível</li>
+            {% endif %}
+        </ul>
+    </div>
+       
+    <div class="grafico">
+        <h2>Gráfico de Previsão</h2>
+        <img id="grafico-previsao" src="./static/imagens/grafico_previsao.png" alt="Gráfico de Previsão">
+    </div>
+    <div class="grafico">
+        <h2>Gráfico de Indicadores de Desempenho</h2>
+        <img id="grafico-indicadores" src="./static/imagens/indicadores_desempenho_modelo.png" alt="Gráfico de Indicadores de Desempenho">
+    </div>
+
+    <div class="terminal">
+        <h2>Terminal</h2>
+        <pre id="log-output" style="background-color: #333; color: #fff; padding: 10px; overflow-y: scroll; height: 300px;"></pre>
+    </div>
+    
+    <script>
+        function updateLogs() {
+            fetch('/logs')
+                .then(response => response.json())
+                .then(data => {
+                    const logOutput = document.getElementById('log-output');
+                    logOutput.textContent = data.logs.join('\n');
+                    logOutput.scrollTop = logOutput.scrollHeight; // Auto-scroll para o final
+                })
+                .catch(err => console.error('Erro ao buscar logs:', err));
+        }
+
+        function updateImages() {
+            const graficoPrevisao = document.getElementById('grafico-previsao');
+            const graficoIndicadores = document.getElementById('grafico-indicadores');
+
+            // Atualiza a imagem adicionando um parâmetro único para evitar cache
+            graficoPrevisao.src = './static/imagens/grafico_previsao.png?t=' + new Date().getTime();
+            graficoIndicadores.src = './static/imagens/indicadores_desempenho_modelo.png?t=' + new Date().getTime();
+        }
+
+        function updateHistorico() {
+            fetch('/historico')
+                .then(response => response.json())
+                .then(data => {
+                    const historicoList = document.getElementById('historico-list');
+                    historicoList.innerHTML = ''; // Limpa a lista existente
+                    data.historico.forEach(row => {
+                        const listItem = document.createElement('li');
+                        for (const [key, value] of Object.entries(row)) {
+                            listItem.innerHTML += `<strong>${key}:</strong> ${value} `;
+                        }
+                        historicoList.appendChild(listItem);
+                    });
+                })
+                .catch(err => console.error('Erro ao buscar histórico:', err));
+        }
+
+        // Atualiza os logs a cada 2 segundos
+        setInterval(updateLogs, 2000);
+
+        // Atualiza as imagens a cada 5 segundos
+        setInterval(updateImages, 3600000);
+
+        // Atualiza o histórico a cada 5 segundos
+        setInterval(updateHistorico, 3600000);
+    </script>    
+</body>
+</html>

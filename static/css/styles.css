@@ -1,0 +1,42 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+form {
+    margin: 10px 0;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+div.carteira-info, div.historico, div.grafico {
+    margin-top: 20px;
+}
+
+div.historico ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+div.historico li {
+    background: #e0e0e0;
+    margin: 5px 0;
+    padding: 10px;
+}
+
+div.grafico img {
+    width: 100%;
+    max-width: 600px;
+}

@@ -1,0 +1,40 @@
+Otimizando parâmetros
+Otimizando parâmetros
+     Compra_preco   Venda_preco    Montante  Variação (%)               Motivo
+0    59813.564416           NaN  100.000000           NaN               Compra
+1    59813.564416  59801.601703   99.620072     -0.379928  Venda por stop loss
+2    59983.269886           NaN   99.620072           NaN               Compra
+3    59983.269886  59971.273232   99.241587     -0.379928  Venda por stop loss
+4    59920.056101           NaN   99.241587           NaN               Compra
+..            ...           ...         ...           ...                  ...
+115  72545.582048  73838.269844  102.703956      1.415483      Venda por lucro
+116  72498.397115           NaN  102.703956           NaN               Compra
+117  72498.397115  73826.062734  104.208272      1.464711      Venda por lucro
+118  70755.560008           NaN  104.208272           NaN               Compra
+119  70755.560008  70741.408896  103.812355     -0.379928  Venda por stop loss
+
+[120 rows x 5 columns]
+Melhores parêmtros: {'par': 'BTC-USDT', 'ciclo': '4H', 'lucro_alvo': 0.0062499999999999995, 'stop_loss': 0.0002, 'margem_seguranca': -0.03} 
+ Retorno de 3.81%
+Resultados de desempenho atualizados e salvos.
+Preço atual de mercado: 69012.0 
+
+Valorizacao potencial: -0.0166464252998026
+Preço atual de mercado: 69006.0 
+
+Valorizacao potencial: -0.016560923728226144
+Preço atual de mercado: 68996.0 
+
+Valorizacao potencial: -0.01641838806293085
+Preço atual de mercado: 68990.0 
+
+Valorizacao potencial: -0.016332846829830022
+Preço atual de mercado: 68982.9 
+
+Valorizacao potencial: -0.016231603814712968
+Preço atual de mercado: 68990.1 
+
+Valorizacao potencial: -0.016334272638972573
+Preço atual de mercado: 68932.0 
+
+Valorizacao potencial: -0.01550518050818164
