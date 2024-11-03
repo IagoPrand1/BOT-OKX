@@ -35,6 +35,9 @@ load_dotenv()
 # Caminho do arquivo .env na pasta V2_WebApp
 env_file_path = os.path.join(os.path.dirname(__file__), '.env')
 
+# Caminho do arquivo de dados dos usuários
+user_data_file = os.path.join(os.path.dirname(__file__), 'usuarios.json')
+
 def set_env_vars(api_key, secret_key, passphrase):
     # Salvar as variáveis no arquivo .env
     with open(env_file_path, 'w') as env_file:
@@ -87,6 +90,10 @@ def executar_loop(par, capital_inicial):
 
     while not stop_event.is_set():
         try:
+            # Certifique-se de que operações que interagem com a GUI ou temporizadores sejam chamadas na thread principal.
+            if pause_event.is_set():
+                stop_event.wait()
+
             parametros_gerais = executar_otimizacao_parametros(lista_duracao_ciclo, par)
             duracao_ciclo = parametros_gerais['ciclo']
             unidade_tempo = duracao_ciclo[-1]
@@ -98,14 +105,12 @@ def executar_loop(par, capital_inicial):
                 'intervalo': int(duracao_ciclo[:-1]) * conversao[unidade_tempo]
             }
 
-            if pause_event.is_set():
-                stop_event.wait()
-
             usdt_carteira = float(okxapi.carteira('USDT')['data'][0]['details'][0]['eq'])
 
             if usdt_carteira < float(carteira_virtual['capital']):
                 capital_inicial = usdt_carteira / 2
                 carteira_virtual['capital'] = str(capital_inicial)
+                # Use uma função segura para enviar mensagens à interface gráfica
                 print(f'Capital inicial ajustado para {usdt_carteira / 2} USDT')
 
             dados_mercado = okxapi.informacoes_mercado('demo', duracao_ciclo, par, 300)
@@ -125,8 +130,57 @@ def executar_loop(par, capital_inicial):
                 print("Encerrando a execução...")
                 break
         except Exception as e:
+            # Adicione log ou tratamento adequado de exceções
             print(f"Erro durante a negociação: {e}")
             break
+        
+# Função para salvar os dados dos usuários
+def salvar_dados_usuario(usuario, api_key, secret_key, passphrase, par, capital_inicial):
+    # Carregar dados existentes
+    if os.path.exists(user_data_file):
+        with open(user_data_file, 'r') as f:
+            usuarios = json.load(f)
+    else:
+        usuarios = []
+
+    # Adicionar novo usuário
+    usuario_data = {
+        "usuario": usuario,
+        "api_key": api_key,
+        "secret_key": secret_key,
+        "passphrase": passphrase,
+        "par": par,
+        "capital_inicial": capital_inicial
+    }
+    usuarios.append(usuario_data)
+
+    # Salvar os dados atualizados
+    with open(user_data_file, 'w') as f:
+        json.dump(usuarios, f, indent=4)
+
+@app.route('/set_env', methods=['POST'])
+def set_env():
+    usuario = request.form['usuario']
+    api_key = request.form['api_key']
+    secret_key = request.form['secret_key']
+    passphrase = request.form['passphrase']
+    par = request.form['par']
+    capital_inicial = request.form['capital_inicial']
+
+    # Salvar os dados do usuário
+    salvar_dados_usuario(usuario, api_key, secret_key, passphrase, par, capital_inicial)
+
+    # Redireciona para a página inicial após salvar os dados
+    return redirect(url_for('index'))
+
+@app.route('/consultar_usuarios', methods=['GET'])
+def consultar_usuarios():
+    if os.path.exists(user_data_file):
+        with open(user_data_file, 'r') as f:
+            usuarios = json.load(f)
+    else:
+        usuarios = []
+    return render_template('consultar_usuarios.html', usuarios=usuarios)
 
 @app.route('/historico')
 def historico():
@@ -188,19 +242,5 @@ def logs():
     except FileNotFoundError:
         return jsonify({'logs': ['Nenhum log disponível']})
 
-@app.route('/set_env', methods=['POST'])
-def set_env():
-    api_key = request.form['api_key']
-    secret_key = request.form['secret_key']
-    passphrase = request.form['passphrase']
-
-    # Armazenar as variáveis de ambiente no arquivo .env
-    set_env_vars(api_key, secret_key, passphrase)
-
-    # Carregar novamente o .env para garantir que as variáveis sejam atualizadas
-    load_dotenv(env_file_path)
-
-    # Redireciona para a página inicial após salvar as credenciais
-    return redirect(url_for('index'))
 if __name__ == '__main__':
     app.run(debug=True)

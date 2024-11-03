@@ -142,5 +142,32 @@
         "stop_loss": 0.0002,
         "margem_seguranca": -0.03,
         "resultado": "3.81%"
+    },
+    {
+        "time": "2024-11-03 02:56:16.137580",
+        "par": "BTC-USDT",
+        "ciclo": "4H",
+        "lucro_alvo": 0.0062499999999999995,
+        "stop_loss": 0.0002,
+        "margem_seguranca": -0.03,
+        "resultado": "6.14%"
+    },
+    {
+        "time": "2024-11-03 02:58:26.829561",
+        "par": "BTC-USDT",
+        "ciclo": "4H",
+        "lucro_alvo": 0.0062499999999999995,
+        "stop_loss": 0.0002,
+        "margem_seguranca": -0.03,
+        "resultado": "6.14%"
+    },
+    {
+        "time": "2024-11-03 03:12:53.480453",
+        "par": "BTC-USDT",
+        "ciclo": "4H",
+        "lucro_alvo": 0.0062499999999999995,
+        "stop_loss": 0.0002,
+        "margem_seguranca": -0.03,
+        "resultado": "6.14%"
     }
 ]

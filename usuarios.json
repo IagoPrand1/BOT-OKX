@@ -1,0 +1,18 @@
+[
+    {
+        "usuario": "iago",
+        "api_key": "c526a733-e865-49bb-96f8-80efea44bc7b",
+        "secret_key": "B2E5C73BA075C7B03214B23F7C369BF4",
+        "passphrase": "Par@negociar1",
+        "par": "BTC-USDT",
+        "capital_inicial": "1"
+    },
+    {
+        "usuario": "ju",
+        "api_key": "c526a733-e865-49bb-96f8-80efea44bc7b",
+        "secret_key": "B2E5C73BA075C7B03214B23F7C369BF4",
+        "passphrase": "Par@negociar1",
+        "par": "BTC-USDT",
+        "capital_inicial": "100"
+    }
+]

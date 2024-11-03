@@ -11,6 +11,9 @@
 
     <form id="env-form" action="/set_env" method="post">
         <h2>Configuração de Credenciais</h2>
+        <label for="usuario">Usuário:</label>
+        <input type="text" id="usuario" name="usuario" required>
+
         <label for="api_key">API Key:</label>
         <input type="text" id="api_key" name="api_key" required>
         
@@ -19,8 +22,18 @@
         
         <label for="passphrase">Passphrase:</label>
         <input type="text" id="passphrase" name="passphrase" required>
+
+        <label for="par">Par:</label>
+        <input type="text" id="par" name="par" required>
+        
+        <label for="capital_inicial">Capital Inicial:</label>
+        <input type="number" id="capital_inicial" name="capital_inicial" step="0.01" required>
         
         <button type="submit">Salvar Credenciais</button>
+    </form>
+
+    <form id="consultar-usuarios-form" action="/consultar_usuarios" method="get">
+        <button type="submit">Consultar Usuários Cadastrados</button>
     </form>
     
     <div class="carteira-info">
